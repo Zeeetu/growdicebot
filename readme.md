@@ -1,6 +1,6 @@
 # growdicebot
 
-automatically joins chat rains on growdice.net
+automatically joins chat rains on growdice.net (growtopia betting site)
 
 ## installation
 
