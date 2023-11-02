@@ -33,8 +33,8 @@ growdicebot <sessionid> (required) -c or --chat (optional, logs chat) -s or --sy
 you can also use it in a python script
 
 ```python
-from growdicebot import growdicebot
-bot = growdicebot("your-session-id-here", log_system = True)
+from growdicebot import GrowDiceBot
+bot = GrowDiceBot("your-session-id-here", log_system = True)
 bot.run()
 ```
 
