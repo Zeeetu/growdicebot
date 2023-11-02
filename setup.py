@@ -1,4 +1,10 @@
+import pathlib
 from setuptools import setup, find_packages
+
+HERE = pathlib.Path(__file__).parent
+
+with (HERE / "requirements.txt").open() as f:
+    requirements = f.read().splitlines()
 
 setup(
     name="growdicebot",
@@ -11,4 +17,5 @@ setup(
             "growdicebot = growdicebot.cli:main",
         ],
     },
+    install_requires=requirements,
 )
