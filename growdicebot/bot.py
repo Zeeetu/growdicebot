@@ -109,6 +109,9 @@ class GrowDiceBot:
             if msg["success"]:
                 self.userHasJoinedChatRain = True
                 self.tprint(f"Joined chat rain!")
+        elif msg["ID"] == "chatRainReward":
+            reward = msg["reward"]
+            self.tprint(f"Won {COL.G}{reward} WLs{COL.X} from chatrain!")
         else:
             if self.debug:
                 print(msg)
