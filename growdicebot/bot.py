@@ -8,12 +8,13 @@ from .color import COL
 
 
 class GrowDiceBot:
-    def __init__(self, sessionid, log_chat=False, log_system=False):
+    def __init__(self, sessionid, log_chat=False, log_system=False, debug=False):
         self.sessionid = sessionid
         self.ws = None
 
         self.log_system = log_system
         self.log_chat = log_chat
+        self.debug = debug
 
         self.chatState = None
         self.userData = None
@@ -109,7 +110,8 @@ class GrowDiceBot:
                 self.userHasJoinedChatRain = True
                 self.tprint(f"Joined chat rain!")
         else:
-            print(msg)
+            if self.debug:
+                print(msg)
 
     def tprint(self, content):
         time = f'[{strftime("%H:%M:%S")}]'

@@ -4,7 +4,7 @@ from .bot import GrowDiceBot
 
 def main():
     args = parse()
-    bot = GrowDiceBot(args.sessionid, args.log_chat, args.log_system)
+    bot = GrowDiceBot(args.sessionid, args.log_chat, args.log_system, args.debug)
     bot.run()
 
 
@@ -24,6 +24,13 @@ def parse():
         action="store_true",
         help="Enable system logging (optional)",
         dest="log_system",
+    )
+    ap.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        help="Enable debugging websocket messages (optional)",
+        dest="debug",
     )
     return ap.parse_args()
 
