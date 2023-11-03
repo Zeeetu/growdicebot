@@ -4,13 +4,16 @@ from time import strftime
 import websockets
 import asyncio
 
+from .color import COL
+
 
 class GrowDiceBot:
     def __init__(self, sessionid, log_chat=False, log_system=False):
-        self.log_system = log_system
         self.sessionid = sessionid
-        self.log_chat = log_chat
         self.ws = None
+
+        self.log_system = log_system
+        self.log_chat = log_chat
 
         self.chatState = None
         self.userData = None
@@ -56,7 +59,6 @@ class GrowDiceBot:
     async def __join_chatrain(self):
         join_msg = encode({"ID": "joinChatRain"})
         await self.ws.send(join_msg)
-        self.userHasJoinedChatRain = True
 
     async def __handle_state(self):
         self.username = self.userData["data"]["username"]
@@ -68,16 +70,19 @@ class GrowDiceBot:
         )
         if self.chatRainIsActive:
             if not self.userHasJoinedChatRain:
-                print(f"Chat Rain is active, joining..")
+                self.tprint(f"Chat Rain is active, joining..")
                 await self.__join_chatrain()
 
     async def __handle(self, msg):
-        time = f'[{strftime("%H:%M:%S")}]'
         msg = decode(msg)
         if any(filtered in msg["ID"].lower() for filtered in self.msgfilter):
             pass
         elif msg["ID"] == "useSession":
-            print(f"{time} Logged in!" if msg["success"] else "Login failed!")
+            self.tprint(
+                f"{COL.G}Logged in!{COL.X}"
+                if msg["success"]
+                else f"{COL.R}Login failed!{COL.X}"
+            )
         elif msg["ID"] == "userData":
             self.userData = msg
             await self.__handle_state()
@@ -88,22 +93,27 @@ class GrowDiceBot:
             sender = chatmsg["username"]
             text = chatmsg["text"]
             if self.log_chat and sender != "SYSTEM":
-                print(f"{time} [CHAT] {sender}: {text}")
+                self.tprint(f"[CHAT] {sender}: {text}")
             if sender == "SYSTEM":
                 if self.log_system:
-                    print(f"{time} [SYSTEM]: {text}")
+                    self.tprint(f"[SYSTEM]: {text}")
         elif msg["ID"] == "chatRainFinished":
-            print(f"{time} Chat rain finished!")
-            self.hasJoinedChatRain = False
+            self.tprint(f"Chat rain finished!")
+            self.userHasJoinedChatRain = False
         elif msg["ID"] == "chatRainStarted":
-            print(f"{time} Chat Rain began, joining..")
+            self.tprint(f"Chat Rain began, joining..")
             if not self.userHasJoinedChatRain:
                 await self.__join_chatrain()
         elif msg["ID"] == "joinChatRain":
             if msg["success"]:
-                print(f"{time} Joined chat rain!")
+                self.userHasJoinedChatRain = True
+                self.tprint(f"Joined chat rain!")
         else:
             print(msg)
+
+    def tprint(self, content):
+        time = f'[{strftime("%H:%M:%S")}]'
+        print(f"{COL.B}{time}{COL.X} {content}")
 
     def run(self):
         asyncio.run(self.__connect())
