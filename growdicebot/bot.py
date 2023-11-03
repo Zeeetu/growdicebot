@@ -20,6 +20,7 @@ class GrowDiceBot:
         self.userData = None
 
         self.userHasJoinedChatRain = False
+        self.chatRainParticipants = None
         self.chatRainIsActive = False
 
         self.username = None
@@ -36,7 +37,6 @@ class GrowDiceBot:
             "bethistory",
             "gamestate",
             "playercashedout",
-            "chatrainparticipants",
         ]
 
         self.ua = UserAgent()
@@ -67,11 +67,11 @@ class GrowDiceBot:
         self.chatRainIsActive = self.chatState["chatRainActive"]
         self.userHasJoinedChatRain = self.userData["data"]["joinedChatRain"]
         if self.chatRainIsActive:
+            self.chatRainParticipants = self.chatState["chatRainParticipants"]
             self.chatRainEndsIn = int(self.chatState["chatRainTime"] / 1000 - time())
-        self.print_info()
+        self.__print_info()
         if self.chatRainIsActive:
             if not self.userHasJoinedChatRain:
-                self.tprint(f"Chat Rain is active, joining..")
                 await self.__join_chatrain()
 
     async def __handle(self, msg):
@@ -99,28 +99,37 @@ class GrowDiceBot:
                 if self.log_system:
                     self.tprint(f"[SYSTEM]: {text}")
         elif msg["ID"] == "chatRainFinished":
-            self.tprint(f"Chat rain finished!")
+            odds = self.__get_odds()
+            self.tprint(f"Chat rain finished! [Odds were {odds}%]")
             self.userHasJoinedChatRain = False
         elif msg["ID"] == "chatRainStarted":
-            self.tprint(f"Chat Rain began, joining..")
             if not self.userHasJoinedChatRain:
                 await self.__join_chatrain()
         elif msg["ID"] == "joinChatRain":
             if msg["success"]:
                 self.userHasJoinedChatRain = True
-                self.tprint(f"Joined chat rain!")
+                self.tprint(f"{COL.G}Joined{COL.X} Chat Rain!")
+            else:
+                self.tprint(f"{COL.R}Failed to join{COL.X} Chat Rain!")
         elif msg["ID"] == "chatRainReward":
             reward = msg["reward"]
-            self.tprint(f"Won {COL.G}{reward} WLs{COL.X} from chatrain!")
+            self.tprint(f"Won {COL.G}{reward} WLs{COL.X} from Chat Rain!")
+        elif msg["ID"] == "chatRainParticipants":
+            participants = msg["participants"]
+            self.chatRainParticipants = participants
         else:
             if self.debug:
                 print(msg)
 
-    def print_info(self):
+    def __get_odds(self):
+        odds = (5 / self.chatRainParticipants) * 100
+        return round(odds, 2)
+
+    def __print_info(self):
         info = f"""
     Username: {COL.Y}{self.username}{COL.X}
     Balance: {COL.Y}{self.balance}{COL.X}
-    {f"Chat Rain {COL.G}is active{COL.X}! [Ends in {self.chatRainEndsIn} seconds]" if self.chatRainIsActive else f"Chat Rain {COL.R}is not active{COL.X}!"}
+    {f"Chat Rain {COL.G}is active{COL.X}! [Ends in {self.chatRainEndsIn} seconds] [{self.chatRainParticipants} participants]" if self.chatRainIsActive else f"Chat Rain {COL.R}is not active{COL.X}!"}
     {f"Chat Rain {COL.G}joined{COL.X}!" if self.userHasJoinedChatRain else f"Chat Rain {COL.R}not joined{COL.X}!"}
     """
         print(info)

@@ -27,7 +27,13 @@ install with pip
 easiest way to use this is with the cli
 
 ```sh
-growdicebot <sessionid> (required) -c or --chat (optional, logs chat) -s or --system (optional, logs system messages)
+growdicebot <sessionid>
+```
+
+view the arguments with
+
+```sh
+growdicebot -h
 ```
 
 you can also use it in a python script
@@ -40,9 +46,9 @@ bot.run()
 
 ## how to get session id?
 
-extract sessionIDfrom local storage after logging in on growdice.net on your browser
+extract "sessionID" key from local storage after logging in on growdice.net on your browser
 
-sessionID will look like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+sessionID will look like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (uuid)
 
 ## roadmap / todo
 
