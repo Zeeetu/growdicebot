@@ -1,6 +1,6 @@
 from fake_useragent import UserAgent
 from bson import encode, decode
-from time import strftime
+from time import time, strftime
 import websockets
 import asyncio
 
@@ -66,9 +66,9 @@ class GrowDiceBot:
         self.balance = self.userData["data"]["balance"]
         self.chatRainIsActive = self.chatState["chatRainActive"]
         self.userHasJoinedChatRain = self.userData["data"]["joinedChatRain"]
-        print(
-            f"Username: {self.username} | Balance: {self.balance} | Chat Rain active: {self.chatRainIsActive} | Chat Rain joined: {self.userHasJoinedChatRain} | Logging chat: {self.log_chat} | Logging system: {self.log_system}"
-        )
+        if self.chatRainIsActive:
+            self.chatRainEndsIn = int(self.chatState["chatRainTime"] / 1000 - time())
+        self.print_info()
         if self.chatRainIsActive:
             if not self.userHasJoinedChatRain:
                 self.tprint(f"Chat Rain is active, joining..")
@@ -79,11 +79,11 @@ class GrowDiceBot:
         if any(filtered in msg["ID"].lower() for filtered in self.msgfilter):
             pass
         elif msg["ID"] == "useSession":
-            self.tprint(
-                f"{COL.G}Logged in!{COL.X}"
-                if msg["success"]
-                else f"{COL.R}Login failed!{COL.X}"
-            )
+            if msg["success"]:
+                self.tprint(f"{COL.G}Logged in!{COL.X}")
+            else:
+                self.tprint(f"{COL.R}Login failed!{COL.X}")
+                quit()
         elif msg["ID"] == "userData":
             self.userData = msg
             await self.__handle_state()
@@ -115,6 +115,15 @@ class GrowDiceBot:
         else:
             if self.debug:
                 print(msg)
+
+    def print_info(self):
+        info = f"""
+    Username: {COL.Y}{self.username}{COL.X}
+    Balance: {COL.Y}{self.balance}{COL.X}
+    {f"Chat Rain {COL.G}is active{COL.X}! [Ends in {self.chatRainEndsIn} seconds]" if self.chatRainIsActive else f"Chat Rain {COL.R}is not active{COL.X}!"}
+    {f"Chat Rain {COL.G}joined{COL.X}!" if self.userHasJoinedChatRain else f"Chat Rain {COL.R}not joined{COL.X}!"}
+    """
+        print(info)
 
     def tprint(self, content):
         time = f'[{strftime("%H:%M:%S")}]'

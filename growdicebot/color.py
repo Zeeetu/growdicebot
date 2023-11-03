@@ -8,6 +8,7 @@ class COL(Enum):
     R = Fore.RED
     B = Fore.BLUE
     G = Fore.GREEN
+    Y = Fore.YELLOW
     X = Style.RESET_ALL
 
     def __str__(self) -> str:
