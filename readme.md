@@ -26,13 +26,13 @@ install with pip
 
 easiest way to use this is with the cli:
 
-```sh
+```bash
 growdicebot <sessionid>
 ```
 
 view the arguments with:
 
-```sh
+```bash
 growdicebot -h
 ```
 
@@ -48,7 +48,7 @@ bot.run()
 
 through cli:
 
-```sh
+```bash
 growdicebot <sessionid> -mb <amount to bet in WLs> -mc <color to bet on>
 ```
 
