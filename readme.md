@@ -1,8 +1,8 @@
-# growdicebot
+# 🎲 growdicebot
 
-automatically joins chat rains on growdice.net (growtopia betting site)
+plays roulette with the martingale bet strategy and joins chat rains automatically on growdice.net (growtopia betting)
 
-## installation
+## ⚙️ installation
 
 clone package
 
@@ -22,38 +22,60 @@ install with pip
   pip install -U .
 ```
 
-## usage / examples
+## 📙 basic usage / examples
 
-easiest way to use this is with the cli
+easiest way to use this is with the cli:
 
 ```sh
 growdicebot <sessionid>
 ```
 
-view the arguments with
+view the arguments with:
 
 ```sh
 growdicebot -h
 ```
 
-you can also use it in a python script
+you can also use it in a python script:
 
 ```python
 from growdicebot import GrowDiceBot
-bot = GrowDiceBot("your-session-id-here", log_system = True)
+bot = GrowDiceBot("your-session-id-here")
 bot.run()
 ```
 
-## how to get session id?
+## 🃏 how to use martingale system
 
-extract "sessionID" key from local storage after logging in on growdice.net on your browser
+through cli:
 
-sessionID will look like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (uuid)
+```sh
+growdicebot <sessionid> -mb <amount to bet in WLs> -mc <color to bet on>
+```
 
-## roadmap / todo
+or in python script:
+
+```python
+from growdicebot import GrowDiceBot, RLT #class containing roulette colors
+bot = GrowDiceBot("your-session-id-here")
+bot.martingale(1, RLT.RED) # betting starts with 1WL on red
+```
+
+note: you don't have to call `run()` when using martingale
+
+## 🔎 how to get session id?
+
+extract sessionIDfrom local storage after logging in on growdice.net on your browser
+
+sessionID will look like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+## 🗺️ roadmap / todo
 
 - multiple accounts
 
 - auto-tip to main account
 
-- randomize join time
+- play other games with different strategies
+
+## 🏅 contributing
+
+contributions are always welcome. attempt to mostly adhere to the basic structure of the project when adding new features

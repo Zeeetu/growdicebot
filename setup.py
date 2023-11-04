@@ -8,7 +8,7 @@ with (HERE / "requirements.txt").open() as f:
 
 setup(
     name="growdicebot",
-    version="1.0.0",
+    version="1.1.0",
     description="Bot for GrowDice.net",
     packages=find_packages(),
     author="zeeetu",

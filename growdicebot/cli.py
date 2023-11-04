@@ -1,11 +1,18 @@
 import argparse
 from .bot import GrowDiceBot
+from .utils import RLT
+
+colors = {"red": RLT.RED, "green": RLT.GREEN, "black": RLT.BLACK}
 
 
 def main():
     args = parse()
-    bot = GrowDiceBot(args.sessionid, args.log_chat, args.log_system, args.debug)
-    bot.run()
+    bot = GrowDiceBot(args.sessionid, args.logChat, args.logSystem, args.debug)
+    if args.martingaleBet and args.martingaleColor:
+        print(args.martingaleBet, colors[args.martingaleColor.lower()])
+        bot.martingale(args.martingaleBet, colors[args.martingaleColor.lower()])
+    else:
+        bot.run()
 
 
 def parse():
@@ -16,14 +23,14 @@ def parse():
         "--chat",
         action="store_true",
         help="Enable chat logging (optional)",
-        dest="log_chat",
+        dest="logChat",
     )
     ap.add_argument(
         "-s",
         "--system",
         action="store_true",
         help="Enable system logging (optional)",
-        dest="log_system",
+        dest="logSystem",
     )
     ap.add_argument(
         "-d",
@@ -31,6 +38,20 @@ def parse():
         action="store_true",
         help="Enable debugging websocket messages (optional)",
         dest="debug",
+    )
+    ap.add_argument(
+        "-mb",
+        "--martingalebet",
+        type=int,
+        help="Martingale bet (optional)",
+        dest="martingaleBet",
+    )
+    ap.add_argument(
+        "-mc",
+        "--martingalecolor",
+        choices=["red", "green", "black"],
+        help="Martingale color (optional)",
+        dest="martingaleColor",
     )
     return ap.parse_args()
 
