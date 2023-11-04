@@ -26,13 +26,13 @@ install with pip
 
 easiest way to use this is with the cli:
 
-```bash
+```
 growdicebot <sessionid>
 ```
 
 view the arguments with:
 
-```bash
+```
 growdicebot -h
 ```
 
@@ -48,7 +48,7 @@ bot.run()
 
 through cli:
 
-```bash
+```
 growdicebot <sessionid> -mb <amount to bet in WLs> -mc <color to bet on>
 ```
 
@@ -64,7 +64,7 @@ note: you don't have to call `run()` when using martingale
 
 ## 🔎 how to get session id?
 
-extract sessionIDfrom local storage after logging in on growdice.net on your browser
+extract sessionID from local storage after logging in on growdice.net on your browser
 
 sessionID will look like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
